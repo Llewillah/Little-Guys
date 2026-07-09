@@ -19,8 +19,12 @@ public class PathfindingGrid : MonoBehaviour
     int prevFrameAgents;
     int totalAgents;
 
+    Camera cam;
+
     private void Start()
     {
+        cam = Camera.main;
+
         LAYER_MASK_GRID = LayerMask.GetMask("Grid");
 
         grid = new FlowfieldGrid(gridWidth, gridHeight, cellSize, gridStartPoint);
@@ -48,7 +52,7 @@ public class PathfindingGrid : MonoBehaviour
     void OnLeftClick() 
     {
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
 
         //find position mouse is clicking
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, LAYER_MASK_GRID)) 
