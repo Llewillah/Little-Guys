@@ -57,7 +57,6 @@ public class PathfindingGrid : MonoBehaviour
         //find position mouse is clicking
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, LAYER_MASK_GRID)) 
         {
-            Debug.Log(hit.point);
             grid.CreateFlowField(hit.point);
         }
         

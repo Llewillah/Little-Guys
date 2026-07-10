@@ -23,7 +23,13 @@ public class Agent : MonoBehaviour
 
     public void SetDir(Vector3 dir)
     {
-        Debug.Log(dir);
         this.dir = dir;
+    }
+
+    public void AddKnockBack(Vector3 forcePos, float knockForce) 
+    {
+        Vector3 dir = (transform.position - forcePos).normalized;
+
+        rb.AddForce(dir * knockForce);
     }
 }
