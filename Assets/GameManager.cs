@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < StartAgents; i++) 
         {
-            pG.AddAgent(sM.SpawnAgent(new Vector3(1, 1, 1)));
+            pG.AddAgent(sM.SpawnAgent(new Vector3(1 + i, 1, 1)));
         }
 
 
