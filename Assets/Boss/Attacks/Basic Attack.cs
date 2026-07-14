@@ -15,21 +15,14 @@ public class BasicAttack : MonoBehaviour, IAttackable
     public Collider[] col;
 
     List<Unit> targets = new List<Unit>();
-
-
-    private void Update()
-    {
-        foreach (var target in targets) 
-        {
-            Debug.Log(target.gameObject.name);
-        }
-    }
     public void DoAttack() 
     {
         foreach (Unit target in targets) 
         {
             target.TakeDamage(damage, transform.parent.position, knockBack);
         }
+
+        targets.Clear();
     }
 
     public int GetRange() 

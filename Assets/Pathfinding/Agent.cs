@@ -1,24 +1,22 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 public class Agent : MonoBehaviour
 {
     public int speed;
     Vector3 dir = Vector3.zero;
     Rigidbody rb;
+
+    public bool active = true;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void DoUpdate() 
     {
-        
-    }
-
-    private void FixedUpdate()
-    {
-        rb.MovePosition(transform.position + dir.normalized * speed * Time.fixedDeltaTime);
+        rb.MovePosition(transform.position + dir.normalized * speed * Time.deltaTime);
     }
 
     public void SetDir(Vector3 dir)

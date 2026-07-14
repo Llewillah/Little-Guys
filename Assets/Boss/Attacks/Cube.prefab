@@ -125,5 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd9902c58792b7e43953e22c585dfe9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicAttack
+  range: 1
+  damage: 1
+  knockBack: 10
+  chargeTime: 0
   col:
   - {fileID: 322449356665636144}

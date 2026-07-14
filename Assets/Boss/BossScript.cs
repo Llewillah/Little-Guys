@@ -13,7 +13,7 @@ public class BossScript : MonoBehaviour
     public IAttackable[] attacks;
     IAttackable selectedAttack;
 
-    public float health;
+    public float health = 1;
     public float speed;
 
     public float attackCooldown;
@@ -34,12 +34,7 @@ public class BossScript : MonoBehaviour
         UNIT_LAYER_MASK = LayerMask.GetMask("Unit");
     }
 
-    private void FixedUpdate()
-    {
-        CheckState();
-    }
-
-    void CheckState()
+    public void CheckState()
     {
         switch (state)
         {
@@ -65,7 +60,7 @@ public class BossScript : MonoBehaviour
             //DO ALL DYING STUFF HERE
         }
 
-        attackTimer += Time.fixedDeltaTime;
+        attackTimer += Time.deltaTime;
 
         if (attackTimer > attackCooldown) 
         {
@@ -113,7 +108,7 @@ public class BossScript : MonoBehaviour
     void Attack() 
     {
         //Check if attack has charged
-        chargeTimer += Time.fixedDeltaTime;
+        chargeTimer += Time.deltaTime;
 
         //Setall animations here
 
@@ -128,12 +123,19 @@ public class BossScript : MonoBehaviour
     }
     void Move() 
     {
-        rb.MovePosition(transform.position + targetDir.normalized * speed * Time.fixedDeltaTime);
+        rb.MovePosition(transform.position + targetDir.normalized * speed * Time.deltaTime);
         state = BossState.Idle;
     }
 
-    public void TakeDamage(float damage) 
+    public bool TakeDamage(float damage) 
     {
         health -= damage;
+
+        if (health <= 0) 
+        {
+            return true;
+        }
+
+        return false;
     }
 }

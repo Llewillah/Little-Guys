@@ -1,22 +1,23 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
+using System.Diagnostics.Contracts;
 
 public class PathfindingGrid : MonoBehaviour
 {
+    Vector3 prevFrame = Vector3.zero;
+    Transform target;
     FlowfieldGrid grid;
 
     public int gridWidth, gridHeight;
     public float cellSize;
     public Vector3 gridStartPoint;
 
-    InputAction leftClick;
-
     int LAYER_MASK_GRID;
 
     List<Agent> pathfindingAgents = new List<Agent>();
 
-    int prevFrameAgents;
     int totalAgents;
 
     Camera cam;
@@ -28,28 +29,59 @@ public class PathfindingGrid : MonoBehaviour
         LAYER_MASK_GRID = LayerMask.GetMask("Grid");
 
         grid = new FlowfieldGrid(gridWidth, gridHeight, cellSize, gridStartPoint);
-        leftClick = InputSystem.actions.FindAction("Attack");
-
-        leftClick.performed += ctx => OnLeftClick();
     }
 
-    private void Update()
+    public void DoUpdate() 
     {
         grid.DrawGrid();
 
-        //Set the direction of all the agents in the flowfield
-        for (int i = 0; i < prevFrameAgents; i++) 
+        if ((int)prevFrame.x / cellSize != (int)target.position.x / cellSize || (int)prevFrame.z / cellSize != (int)target.position.z / cellSize) 
         {
-            pathfindingAgents[i].SetDir(grid.GetDir(pathfindingAgents[i].transform.position));
+            grid.CreateFlowField(target.position);
         }
 
-        if (totalAgents != prevFrameAgents) 
-        { 
-            prevFrameAgents = totalAgents;
+
+        //Set the direction of all the agents in the flowfield
+        for (int i = 0; i < totalAgents; i++)
+        {
+            if (pathfindingAgents[i].active)
+            {
+                //Check if agent is not in same tile as boss
+                if (grid.GetDir(pathfindingAgents[i].transform.position) != Vector3.zero)
+                {
+                    pathfindingAgents[i].SetDir(grid.GetDir(pathfindingAgents[i].transform.position));
+                }
+                else
+                {
+                    pathfindingAgents[i].SetDir(target.position - pathfindingAgents[i].transform.position);
+                }
+
+                pathfindingAgents[i].DoUpdate();
+            }
         }
     }
 
-    void OnLeftClick() 
+    public void AddAgent(Agent agent) 
+    { 
+        pathfindingAgents.Add(agent);
+        totalAgents++;
+    }
+
+    public void RemoveAgent(Agent agent) 
+    { 
+        pathfindingAgents.Remove(agent);
+        totalAgents--;
+    }
+
+    public void SetTarget(Transform target) 
+    {
+        this.target = target;
+        grid.CreateFlowField(target.position);
+        prevFrame = target.position;
+    }
+
+    //Will be useful for A* pathfinding
+    /*void OnLeftClick() 
     {
         RaycastHit hit;
         Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -60,11 +92,5 @@ public class PathfindingGrid : MonoBehaviour
             grid.CreateFlowField(hit.point);
         }
         
-    }
-
-    public void AddAgent(Agent agent) 
-    { 
-        pathfindingAgents.Add(agent);
-        totalAgents++;
-    }
+    }*/
 }

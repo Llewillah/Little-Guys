@@ -1,8 +1,9 @@
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class SpawningManager : MonoBehaviour
 {
-    public GameObject test1, tile, agent;
+    public GameObject test1, tile, unit, boss;
 
     public void SpawnTest(Vector3 pos) 
     { 
@@ -15,9 +16,14 @@ public class SpawningManager : MonoBehaviour
         tile.transform.localScale = new Vector3(scale,1,scale);
     }
 
-    public Agent SpawnAgent(Vector3 pos) 
+    public GameObject SpawnUnit(Vector3 pos) 
     { 
-        GameObject obj = GameObject.Instantiate(agent, pos, Quaternion.identity);
-        return obj.GetComponent<Agent>();
+        return Instantiate(unit, pos, Quaternion.identity);
+    }
+
+    public BossScript SpawnBoss(Vector3 pos) 
+    {
+        GameObject obj = GameObject.Instantiate(boss, pos, Quaternion.identity);
+        return obj.GetComponent<BossScript>();
     }
 }

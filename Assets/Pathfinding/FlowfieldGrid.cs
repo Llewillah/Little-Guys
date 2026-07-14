@@ -63,6 +63,7 @@ public class FlowfieldGrid
         }
     }
 
+    //Draws the grid purely for testing
     public void DrawGrid()
     {
         for (int i = 0; i < width; i++)
@@ -85,6 +86,7 @@ public class FlowfieldGrid
         Debug.DrawLine(GetWorldPos(0, height), GetWorldPos(width, height));
     }
 
+    //converts world pos to grid pos
     void GetGridPos(Vector3 pos, out int x, out int y)
     {
         pos -= originPos;
@@ -93,11 +95,13 @@ public class FlowfieldGrid
         y = (int)(pos.z / cellSize);
     }
 
+    //converts grid pos to world pos
     Vector3 GetWorldPos(int x, int y)
     {
         return new Vector3(x * cellSize + cellSize / 2, 0 ,  y * cellSize + cellSize / 2) + originPos;
     }
 
+    //takes in position and returns exact grid position
     public Vector3 GetWorldGridTest(Vector3 pos) 
     {
         GetGridPos(pos, out int x, out int y);
@@ -157,6 +161,7 @@ public class FlowfieldGrid
         grid[x, y].SetCost(0);
         visited[x, y] = true;
 
+        //loop through grid until all tiles are checked
         while (queue.Count > 0)
         {
             GridNode node = queue.Dequeue();
@@ -172,6 +177,8 @@ public class FlowfieldGrid
                     {
                         queue.Enqueue(grid[newX, newY]);
                         visited[newX, newY] = true;
+
+                        //makes nodes further from start more expensive
                         grid[newX, newY].SetCost(node.cost);
                         //node.tile.DisplayText(node.cost);
                     }
@@ -180,6 +187,7 @@ public class FlowfieldGrid
         }
 
 
+        //loops throught each tile to find the lowest cost neighbour
         foreach (GridNode node in grid)
         {
             int highestCost = node.cost;
